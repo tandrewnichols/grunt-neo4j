@@ -1,6 +1,9 @@
+expect = require('indeed').expect
+sinon = require('sinon')
+
 describe 'neo4j', ->
   Given -> @cli = require('simple-cli')
-  Given -> spyOn @cli, 'spawn'
+  Given -> sinon.stub @cli, 'spawn'
   Given -> @grunt =
     registerMultiTask: sinon.stub()
   Given -> @context =
