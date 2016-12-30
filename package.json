@@ -1,6 +1,6 @@
 {
   "name": "grunt-neo4j",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Manage the neo4j binary via grunt",
   "main": "tasks/neo4j.js",
   "scripts": {
