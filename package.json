@@ -4,7 +4,9 @@
   "description": "Manage the neo4j binary via grunt",
   "main": "tasks/neo4j.js",
   "scripts": {
-    "test": "grunt"
+    "test": "grunt",
+    "travis": "grunt ci",
+    "codeclimate": "codeclimate-test-reporter < coverage/lcov.info"
   },
   "repository": {
     "type": "git",
@@ -28,27 +30,28 @@
   },
   "homepage": "https://github.com/tandrewnichols/grunt-neo4j",
   "dependencies": {
-    "simple-cli": "^0.1.1"
+    "simple-cli": "^4.0.0"
   },
   "devDependencies": {
-    "coffee-script": "^1.8.0",
-    "grunt": "^0.4.5",
-    "grunt-contrib-jshint": "^0.10.0",
-    "grunt-mocha-cov": "^0.3.0",
-    "grunt-mocha-test": "^0.12.4",
-    "grunt-travis-matrix": "0.0.4",
-    "indeed": "^1.0.6",
-    "jshint-stylish": "^1.0.0",
-    "mocha": "^2.1.0",
+    "codeclimate-test-reporter": "^0.4.0",
+    "coffee-script": "^1.12.2",
+    "eslint-codeframe-formatter": "^1.0.2",
+    "grunt": "^1.0.1",
+    "grunt-cli": "^1.2.0",
+    "grunt-eslint": "^19.0.0",
+    "grunt-mocha-test": "^0.13.2",
+    "grunt-open": "^0.2.3",
+    "grunt-shell": "^2.1.0",
+    "grunt-simple-istanbul": "^3.0.2",
+    "grunt-travis-matrix": "1.0.0",
+    "mocha": "^3.2.0",
     "mocha-given": "^0.1.3",
-    "mocha-lcov-reporter": "0.0.1",
-    "sinon": "^1.12.2"
+    "proxyquire": "^1.7.10",
+    "should": "^11.1.2",
+    "should-sinon": "0.0.5",
+    "sinon": "^1.17.6"
   },
-  "config": {
-    "blanket": {
-      "pattern": [
-        "grunt-neo4j/tasks"
-      ]
-    }
+  "engines": {
+    "node": ">=4"
   }
 }

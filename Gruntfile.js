@@ -1,69 +1,70 @@
 module.exports = function(grunt) {
-  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-mocha-test');
-  grunt.loadNpmTasks('grunt-mocha-cov');
   grunt.loadNpmTasks('grunt-travis-matrix');
+  grunt.loadNpmTasks('grunt-eslint');
+  grunt.loadNpmTasks('grunt-shell');
+  grunt.loadNpmTasks('grunt-simple-istanbul');
+  grunt.loadNpmTasks('grunt-open');
   grunt.loadTasks('tasks');
 
   grunt.initConfig({
-    jshint: {
-      options: {
-        reporter: require('jshint-stylish'),
-        eqeqeq: true,
-        es3: true,
-        indent: 2,
-        newcap: true,
-        quotmark: 'single'
-      },
-      all: ['tasks/*.js']
-    },
-    mochacov: {
-      lcov: {
-        options: {
-          reporter: 'mocha-lcov-reporter',
-          instrument: true,
-          ui: 'mocha-given',
-          require: 'coffee-script/register',
-          output: 'coverage/coverage.lcov'
-        },
-        src: ['test/**/*.coffee'],
-      },
-      html: {
-        options: {
-          reporter: 'html-cov',
-          ui: 'mocha-given',
-          require: 'coffee-script/register',
-          output: 'coverage/coverage.html'
-        },
-        src: ['test/**/*.coffee']
-      }
-    },
     mochaTest: {
       options: {
         reporter: 'spec',
         ui: 'mocha-given',
-        require: 'coffee-script/register'
+        require: ['should', 'should-sinon', 'coffee-script/register']
       },
       test: {
         src: ['test/**/*.coffee']
       }
     },
-    travis: {
-      options: {
-        targets: {
-          test: '{{ version }}',
-          when: 'v0.10',
-          tasks: ['mochacov:lcov', 'matrix:v0.10']
+    travisMatrix: {
+      v4: {
+        test: function() {
+          return /^v4/.test(process.version);
+        },
+        tasks: ['istanbul:unit', 'shell:codeclimate']
+      }
+    },
+    shell: {
+      codeclimate: 'npm run codeclimate'
+    },
+    istanbul: {
+      unit: {
+        options: {
+          root: 'tasks',
+          dir: 'coverage',
+          simple: {
+            cmd: 'cover',
+            args: ['grunt', 'mocha'],
+            rawArgs: ['--', '--color']
+          }
         }
       }
     },
-    matrix: {
-      'v0.10': 'codeclimate < coverage/coverage.lcov'
+    eslint: {
+      tasks: {
+        options: {
+          configFile: '.eslint.json',
+          format: 'node_modules/eslint-codeframe-formatter'
+        },
+        src: ['tasks/**/*.js']
+      }
+    },
+    open: {
+      coverage: {
+        path: 'coverage/lcov-report/index.html'
+      }
+    },
+    neo4j: {
+      start: {
+        debug: true
+      }
     }
   });
 
   grunt.registerTask('mocha', ['mochaTest:test']);
-  grunt.registerTask('default', ['jshint:all', 'mocha']);
-  grunt.registerTask('coverage', ['mochacov:html']);
-  grunt.registerTask('ci', ['jshint:all', 'mocha', 'travis']);
+  grunt.registerTask('default', ['eslint:tasks', 'mocha']);
+  grunt.registerTask('coverage', ['istanbul:unit', 'open:coverage']);
+  grunt.registerTask('ci', ['eslint:tasks', 'mocha', 'travisMatrix']);
 };
